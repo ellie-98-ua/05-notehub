@@ -9,10 +9,17 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/react": "^19.1.13",
     "typescript": "~5.8.3",
     "vite": "^7.1.6"
   },
   "dependencies": {
-    "axios": "^1.12.2"
+    "axios": "^1.12.2",
+    "formik": "^2.4.6",
+    "paginate": "^0.1.1",
+    "query": "^0.2.0",
+    "react": "^19.1.1",
+    "react-hot-toast": "^2.6.0",
+    "yup": "^1.7.0"
   }
 }
