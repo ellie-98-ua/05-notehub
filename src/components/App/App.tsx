@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from '@tanstack/react-query';
-import { fetchNotes } from '../../services/noteService';
+import { fetchNotes, type FetchNotesResponse } from '../../services/noteService';
 import NoteList from "../NoteList/NoteList";
 import Modal from "../Modal/Modal";
 import NoteForm from "../NoteForm/NoteForm";
@@ -15,13 +15,13 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [debouncedSearch] = useDebounce(search, 500);
 
-  const { data, isLoading, error } = useQuery(
-    ['notes', page, debouncedSearch],
-    () => fetchNotes({ page, perPage: 12, search: debouncedSearch })
-  );
+  const { data, isLoading, error } = useQuery<FetchNotesResponse, Error>({
+    queryKey: ['notes', page, debouncedSearch],
+    queryFn: () => fetchNotes({ page, perPage: 12, search: debouncedSearch }),
+  });
 
-  const notes = data?.results || [];
-  const totalPages = data?.total_pages || 1;
+  const notes = data?.results ?? [];
+  const totalPages = data?.total_pages ?? 1;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);

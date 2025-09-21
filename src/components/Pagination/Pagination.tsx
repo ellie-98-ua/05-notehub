@@ -17,6 +17,8 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
       forcePage={page - 1}
       containerClassName={css.pagination}
       activeClassName={css.active}
+      pageRangeDisplayed={3} 
+      marginPagesDisplayed={1}
     />
   );
 }

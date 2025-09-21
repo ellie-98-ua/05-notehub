@@ -10,16 +10,21 @@
   },
   "devDependencies": {
     "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@types/react-paginate": "^7.1.4",
     "typescript": "~5.8.3",
     "vite": "^7.1.6"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.89.0",
     "axios": "^1.12.2",
+    "dom": "^0.0.3",
     "formik": "^2.4.6",
     "paginate": "^0.1.1",
     "query": "^0.2.0",
     "react": "^19.1.1",
     "react-hot-toast": "^2.6.0",
+    "use-debounce": "^10.0.6",
     "yup": "^1.7.0"
   }
 }
