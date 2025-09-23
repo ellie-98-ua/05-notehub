@@ -11,10 +11,8 @@ export interface FetchNotesParams {
 }
 
 export interface FetchNotesResponse {
-  results: Note[];
+  notes: Note[];
   total_pages: number;
-  page: number;
-  total_results: number;
 }
 
 export const fetchNotes = async ({
@@ -37,7 +35,7 @@ export const createNote = async (note: Omit<Note, "id">) => {
 };
 
 export const deleteNote = async (id: string) => {
-  const { data } = await axios.delete(`${BASE_URL}/${id}`, {
+  const { data } = await axios.delete<Note>(`${BASE_URL}/${id}`, {
     headers: { Authorization: `Bearer ${TOKEN}` },
   });
   return data;
