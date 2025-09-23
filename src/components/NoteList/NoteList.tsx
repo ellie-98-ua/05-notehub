@@ -10,12 +10,12 @@ interface NoteListProps {
 export default function NoteList({ notes }: NoteListProps) {
   const queryClient = useQueryClient();
 
-  const deleteMutation = useMutation<void, Error, string>({
-    mutationFn: deleteNote,
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteNote(id), 
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notes'] }),
   });
 
-  const { mutate, isLoading } = deleteMutation as typeof deleteMutation & { isLoading: boolean };
+  const { mutate, isPending } = deleteMutation;
 
   if (notes.length === 0) return <p>No notes found.</p>;
 
@@ -30,9 +30,9 @@ export default function NoteList({ notes }: NoteListProps) {
             <button
               className={css.button}
               onClick={() => mutate(note.id)}
-              disabled={isLoading} 
+              disabled={isPending}
             >
-              {isLoading ? 'Deleting...' : 'Delete'}
+              {isPending ? 'Deleting...' : 'Delete'}
             </button>
           </div>
         </li>

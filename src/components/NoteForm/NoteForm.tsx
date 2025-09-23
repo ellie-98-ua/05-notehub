@@ -1,9 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { UseMutationResult } from '@tanstack/react-query';
 import { createNote } from '../../services/noteService';
-import type { Note, NoteTag } from '../../types/note';
+import type { NoteTag, CreateNoteInput } from '../../types/note';
 import css from './NoteForm.module.css';
 
 interface NoteFormProps {
@@ -22,16 +21,14 @@ export default function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: createNote,
+    mutationFn: (note: CreateNoteInput) => createNote(note),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
       onClose();
     },
-  }) as UseMutationResult<Note, Error, Omit<Note, 'id'>> & { isLoading: boolean };
+  });
 
-  const { mutate, isLoading } = createMutation;
-
-  const initialValues: Omit<Note, 'id'> = {
+  const initialValues: CreateNoteInput = {
     title: '',
     content: '',
     tag: 'Todo',
@@ -41,7 +38,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values: Omit<Note, 'id'>) => mutate(values)}
+      onSubmit={(values) => createMutation.mutate(values)}
     >
       <Form className={css.form}>
         <div className={css.formGroup}>
@@ -52,7 +49,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
 
         <div className={css.formGroup}>
           <label htmlFor="content">Content</label>
-          <Field as="textarea" id="content" name="content" className={css.textarea} />
+          <Field as="textarea" id="content" name="content" rows={8} className={css.textarea} />
           <ErrorMessage name="content" component="span" className={css.error} />
         </div>
 
@@ -60,20 +57,16 @@ export default function NoteForm({ onClose }: NoteFormProps) {
           <label htmlFor="tag">Tag</label>
           <Field as="select" id="tag" name="tag" className={css.select}>
             {TAGS.map((tag) => (
-              <option key={tag} value={tag}>
-                {tag}
-              </option>
+              <option key={tag} value={tag}>{tag}</option>
             ))}
           </Field>
           <ErrorMessage name="tag" component="span" className={css.error} />
         </div>
 
         <div className={css.actions}>
-          <button type="button" className={css.cancelButton} onClick={onClose}>
-            Cancel
-          </button>
-          <button type="submit" className={css.submitButton} disabled={isLoading}>
-            {isLoading ? 'Creating...' : 'Create note'}
+          <button type="button" className={css.cancelButton} onClick={onClose}>Cancel</button>
+          <button type="submit" className={css.submitButton} disabled={createMutation.isPending}>
+            {createMutation.isPending ? 'Creating...' : 'Create note'}
           </button>
         </div>
       </Form>

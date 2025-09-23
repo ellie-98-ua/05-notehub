@@ -26,7 +26,7 @@ export default function App() {
     queryFn: () => fetchNotes({ page, perPage: 12, search: debouncedSearch }),
   });
 
-  const notes = data?.notes ?? [];
+  const notes = data?.results ?? [];
   const totalPages = data?.total_pages ?? 1;
 
   const openModal = () => setIsModalOpen(true);
