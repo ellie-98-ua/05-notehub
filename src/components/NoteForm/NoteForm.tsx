@@ -35,7 +35,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
   };
 
   return (
-    <Formik
+    <Formik<CreateNoteInput>
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values) => createMutation.mutate(values)}
@@ -49,7 +49,13 @@ export default function NoteForm({ onClose }: NoteFormProps) {
 
         <div className={css.formGroup}>
           <label htmlFor="content">Content</label>
-          <Field as="textarea" id="content" name="content" rows={8} className={css.textarea} />
+          <Field
+            as="textarea"
+            id="content"
+            name="content"
+            rows={8}
+            className={css.textarea}
+          />
           <ErrorMessage name="content" component="span" className={css.error} />
         </div>
 
@@ -64,7 +70,9 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         </div>
 
         <div className={css.actions}>
-          <button type="button" className={css.cancelButton} onClick={onClose}>Cancel</button>
+          <button type="button" className={css.cancelButton} onClick={onClose}>
+            Cancel
+          </button>
           <button type="submit" className={css.submitButton} disabled={createMutation.isPending}>
             {createMutation.isPending ? 'Creating...' : 'Create note'}
           </button>
