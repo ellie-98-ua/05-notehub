@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { fetchNotes, type FetchNotesResponse } from '../../services/noteService';
 
 import NoteList from "../NoteList/NoteList";
@@ -24,10 +24,11 @@ export default function App() {
   const { data, isLoading, error } = useQuery<FetchNotesResponse, Error>({
     queryKey: ['notes', page, debouncedSearch],
     queryFn: () => fetchNotes({ page, perPage: 12, search: debouncedSearch }),
+    placeholderData: keepPreviousData,
   });
 
-  const notes = data?.results ?? [];
-  const totalPages = data?.total_pages ?? 1;
+  const notes = data?.notes ?? [];
+  const totalPages = data?.totalPages ?? 1;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -45,7 +46,9 @@ export default function App() {
       {error && <p>Error loading notes</p>}
 
       {notes.length > 0 && <NoteList notes={notes} />}
-      {totalPages > 1 && <Pagination page={page} onPageChange={setPage} totalPages={totalPages} />}
+      {totalPages > 1 && (
+        <Pagination page={page} onPageChange={setPage} totalPages={totalPages} />
+      )}
 
       {isModalOpen && (
         <Modal onClose={closeModal}>
